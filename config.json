@@ -1,0 +1,22 @@
+[
+    {
+        "module_name": "users",
+        "crud": true
+    },
+    {
+        "module_name": "email",
+        "crud": false
+    },
+    {
+        "module_name": "password",
+        "crud": true
+    },
+    {
+        "module_name": "name",
+        "crud": true
+    },
+    {
+        "module_name": "adress",
+        "crud": false
+    }
+]

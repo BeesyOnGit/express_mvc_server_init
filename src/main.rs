@@ -8,8 +8,8 @@ use std::io::Write;
 use std::path::Path;
 // use std::process::Command;
 use utils::content_utils::{
-    app_content, controllers_content, db_connect_content, middleware_content, model_content,
-    package_json_content, router_content,
+    app_content, controllers_content, db_connect_content, env_content, middleware_content,
+    model_content, package_json_content, router_content,
 };
 use utils::utils::{capitalize, execute, prompt_user, read_file, rm_dir, rust_ascii};
 
@@ -18,7 +18,7 @@ async fn main() {
     let mut file_path = String::from("");
     let mut work_dir = String::from("");
 
-    let files_struct: [FileStructure; 7] = [
+    let files_struct: [FileStructure; 8] = [
         FileStructure::new("Controllers", "folder"),
         FileStructure::new("Models", "folder"),
         FileStructure::new("Routes", "folder"),
@@ -26,6 +26,7 @@ async fn main() {
         FileStructure::new("App.ts", "file"),
         FileStructure::new("DBConnection.ts", "file"),
         FileStructure::new("package.json", "file"),
+        FileStructure::new(".env", "file"),
     ];
 
     let args: Vec<String> = std::env::args().skip(1).collect();
@@ -197,14 +198,6 @@ async fn main() {
         .write_all(app_file.as_bytes())
         .expect("error writing the file");
 
-    // let _ex = execute(format!("cd {} && npm i", work_dir)).await;
-    // let _ = match OS {
-    //     "linux" => execute(format!("cd {} && npm i", work_dir)).await,
-    //     "macos" => execute(format!("cd {} && npm i", work_dir)).await,
-    //     "windows" => execute(format!("cd {} ", work_dir)).await,
-    //     _ => execute(format!("cd {} ", work_dir)).await,
-    // };
-
     println!("\n \n \n \n \n \n");
     print!("{}", rust_ascii());
     println!("\n");
@@ -222,6 +215,7 @@ fn execute_function(func_type: &str, param1: &str, param2: &bool) -> String {
         "App.ts" => return app_content(),
         "package.json" => return package_json_content(),
         "DBConnection.ts" => return db_connect_content(),
+        ".env" => return env_content(),
         _ => return "".to_string(),
     };
 }

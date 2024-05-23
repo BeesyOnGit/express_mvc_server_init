@@ -387,3 +387,10 @@ pub fn package_json_content() -> String {
     "#
     .to_string();
 }
+
+pub fn env_content() -> String {
+    return r#"PORT= 3000
+    TOKEN_ENCRIPTION_KEY= "your_token_encription_key_here"
+    PASSWORD_ENCRIPTION_KEY= "your_password_encription_key_here""#
+        .to_string();
+}

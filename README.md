@@ -16,21 +16,23 @@ This Rust program automates the creation and management of an Express.js backend
 1. **Clone the repository:**
    ```sh
    git clone https://github.com/yourusername/express-mvc-automation.git
-   cd express-mvc-automation
+   cd express-mvc-server-init
    ```
 
-2. **Build the project:**
-   Make sure you have Rust installed. If not, install it from [rust-lang.org](https://www.rust-lang.org/).
-
+2. **Cd into the releases dir:**
    ```sh
-   cargo build --release
+   cd releases
    ```
 
 3. **Run the executable:**
-   The compiled executable will be in the `target/release` directory.
-
+   for Windows run the rmvc.exe
    ```sh
-   ./target/release/express_mvc_automation --path /path/to/config.json --workdir /path/to/workdir
+   ./releases/rmvc.exe --path /path/to/config.json --workdir /path/to/workdir
+   ```
+   
+   for Linux/Unix(MacOs) run the rmvc binary
+   ```sh
+   ./releases/rmvc --path /path/to/config.json --workdir /path/to/workdir
    ```
 
 ## Usage
@@ -43,7 +45,7 @@ This Rust program automates the creation and management of an Express.js backend
    - `--workdir`: Working directory where the project files will be created.
 
    ```sh
-   ./express_mvc_automation --path /path/to/config.json --workdir /path/to/workdir
+   ./releases/rmvc --path /path/to/config.json --workdir /path/to/workdir
    ```
 
 3. **Reset the project (optional):**

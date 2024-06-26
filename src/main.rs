@@ -144,22 +144,25 @@ async fn main() {
                 ))
                 .expect("Error opening codes file");
 
-                // reade the file content as string and plce it in the code_file_string variable
+                // reade the file content as string and place it in the code_file_string variable
                 let _ = code_file_open.read_to_string(&mut code_file_string);
 
                 if i != 0 {
                     // insert "," and newline character
                     code_file_string.push_str(",\n");
                 }
+                println!("{}", code_file_string);
 
                 // insert the content of the current module_name
                 let code_file_content = format!(
                     "{}",
                     codes_content(&config.module_name, &config.crud, &format!("{}", i))
+                        .replace("`", "\"")
                 );
 
                 // insert the content of the current module_name inside string
                 code_file_string.push_str(&code_file_content);
+                println!("{}", code_file_string);
 
                 // if current module is last then close the json
                 if i + 1 == configs.len() {
@@ -167,7 +170,13 @@ async fn main() {
                 }
 
                 // write the result to the original file
-                let _ = code_file_open.write_all(code_file_string.as_bytes());
+                let mut new_codes_file = File::create(&format!(
+                    "{}/App/{}/responseCodes.json",
+                    work_dir, structure.name,
+                ))
+                .expect("error creating new codes file");
+
+                new_codes_file.write_all(code_file_string.as_bytes());
 
                 continue;
             }

@@ -171,14 +171,14 @@ pub fn codes_content(name: &str, crud: &bool, code: &str) -> String {
     if *crud {
         return format!(
             "
-    E{}0:'Error creating new {}',
-    E{}1:'Error can't find this {}',
-    E{}2:'Error occured while editing the {}',
-    E{}3:'Error occured while deleting the {}',
-    S{}0:'new {} created successfully',
-    S{}1:'{} edited successfully',
-    S{}2:'{} deleted successfully',
-    S{}3:'{} found successfully',
+    `E{}0`:`Error creating new {}`,
+    `E{}1`:`Error can't find this {}`,
+    `E{}2`:`Error occured while editing the {}`,
+    `E{}3`:`Error occured while deleting the {}`,
+    `S{}0`:`new {} created successfully`,
+    `S{}1`:`{} edited successfully`,
+    `S{}2`:`{} deleted successfully`,
+    `S{}3`:`{} found successfully`
         ",
             code,
             name,
@@ -200,8 +200,8 @@ pub fn codes_content(name: &str, crud: &bool, code: &str) -> String {
     }
     return format!(
         "
-E{}0:'Error creating new {}',
-S{}0:'new {} created successfully',
+`E{}0`:`Error creating new {}`,
+`S{}0`:`new {} created successfully`
     ",
         code, name, code, name,
     );

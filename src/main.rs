@@ -3,12 +3,12 @@ mod utils;
 use serde::Deserialize;
 use std::fs;
 use std::fs::File;
-use std::io::Write;
+use std::io::{Read, Write};
 use std::path::Path;
 // use std::process::Command;
 use utils::content_utils::{
-    app_content, controllers_content, db_connect_content, env_content, middleware_content,
-    model_content, package_json_content, router_content,
+    app_content, codes_content, controllers_content, db_connect_content, env_content,
+    middleware_content, model_content, package_json_content, router_content,
 };
 use utils::utils::{capitalize, prompt_user, read_file, rm_dir, rust_ascii};
 
@@ -91,30 +91,84 @@ async fn main() {
 
     // files structure creation
     for structure in files_struct.iter() {
-        for config in configs.iter() {
+        for (i, config) in configs.iter().enumerate() {
             let curr_name = capitalize(&config.module_name);
 
             if structure.name == "Middleware" {
-                let file_exist = Path::new(&format!(
+                // check whether the ServerFnctions file existe
+                let functions_exist = Path::new(&format!(
                     "{}/App/{}/ServerFunctions.ts",
                     work_dir, structure.name,
                 ))
                 .exists();
 
-                if file_exist {
-                    continue;
+                // if not create the file and insert it's content
+                if !functions_exist {
+                    let mut current_file = File::create(&format!(
+                        "{}/App/{}/ServerFunctions.ts",
+                        work_dir, structure.name,
+                    ))
+                    .expect("Error creating file");
+
+                    let file_content = middleware_content();
+                    current_file
+                        .write_all(file_content.as_bytes())
+                        .expect("error writing the file");
                 }
 
-                let mut current_file = File::create(&format!(
-                    "{}/App/{}/ServerFunctions.ts",
+                // check whether the responseCodes file exists
+                let codes_exist = Path::new(&format!(
+                    "{}/App/{}/responseCodes.json",
                     work_dir, structure.name,
                 ))
-                .expect("Error creating file");
+                .exists();
 
-                let file_content = middleware_content();
-                current_file
-                    .write_all(file_content.as_bytes())
-                    .expect("error writing the file");
+                let mut code_file_string = String::new();
+
+                // if not create the file
+                if !codes_exist {
+                    let mut file = File::create(&format!(
+                        "{}/App/{}/responseCodes.json",
+                        work_dir, structure.name,
+                    ))
+                    .expect("Error creating file");
+
+                    file.write_all("{".as_bytes())
+                        .expect("initial json value for codes file not writen");
+                }
+
+                // open the file
+                let mut code_file_open = File::open(&format!(
+                    "{}/App/{}/responseCodes.json",
+                    work_dir, structure.name,
+                ))
+                .expect("Error opening codes file");
+
+                // reade the file content as string and plce it in the code_file_string variable
+                let _ = code_file_open.read_to_string(&mut code_file_string);
+
+                if i != 0 {
+                    // insert "," and newline character
+                    code_file_string.push_str(",\n");
+                }
+
+                // insert the content of the current module_name
+                let code_file_content = format!(
+                    "{}",
+                    codes_content(&config.module_name, &config.crud, &format!("{}", i))
+                );
+
+                // insert the content of the current module_name inside string
+                code_file_string.push_str(&code_file_content);
+
+                // if current module is last then close the json
+                if i + 1 == configs.len() {
+                    code_file_string.push_str("}")
+                }
+
+                // write the result to the original file
+                let _ = code_file_open.write_all(code_file_string.as_bytes());
+
                 continue;
             }
 
@@ -123,7 +177,8 @@ async fn main() {
                     File::create(&format!("{}/App/{}", work_dir, structure.name))
                         .expect("Error creating file");
 
-                let file_content = execute_function(&structure.name, &curr_name, &config.crud);
+                let file_content =
+                    execute_function(&structure.name, &curr_name, &config.crud, format!("{}", i));
                 current_file
                     .write_all(file_content.as_bytes())
                     .expect("error writing the file");
@@ -153,7 +208,8 @@ async fn main() {
             ))
             .expect("Error creating file");
 
-            let file_content = execute_function(&structure.name, &curr_name, &config.crud);
+            let file_content =
+                execute_function(&structure.name, &curr_name, &config.crud, format!("{}", i));
             current_file
                 .write_all(file_content.as_bytes())
                 .expect("error writing the file");
@@ -212,9 +268,9 @@ async fn main() {
     println!("program writen in Rust 🦀 with ❤");
 }
 
-fn execute_function(func_type: &str, param1: &str, param2: &bool) -> String {
+fn execute_function(func_type: &str, param1: &str, param2: &bool, index: String) -> String {
     match func_type {
-        "Controllers" => return controllers_content(param1, param2),
+        "Controllers" => return controllers_content(param1, param2, &index),
         "Routes" => return router_content(param1, param2),
         "Models" => return model_content(param1),
         "App.ts" => return app_content(),

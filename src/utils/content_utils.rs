@@ -1,4 +1,4 @@
-pub fn controllers_content(name: &str, crud: &bool) -> String {
+pub fn controllers_content(name: &str, crud: &bool, code: &str) -> String {
     if !crud {
         let non_crud_file = format!(
             "import {{ Response, Request }} from 'express';
@@ -11,16 +11,26 @@ pub fn controllers_content(name: &str, crud: &bool) -> String {
                 const new{} = await {}Model.create(body);
         
                 if (!new{}) {{
-                    return res.json({{ code: '011' }});
+                    return res.json({{ code: 'E{code}0' }});
                 }}
                 const {{ _id }} = new{};
         
-                return res.json({{ code: '' }});
+                return res.json({{ code: 'S{code2}0' }});
             }} catch (error) {{
                 console.log('🚀 ~ file: {}Controllers.ts:21 ~ create{} ~ error:', error);
             }}
         }};",
-            name, name, name, name, name, name, name, name, name
+            name,
+            name,
+            name,
+            name,
+            name,
+            name,
+            name,
+            name,
+            name,
+            code = code,
+            code2 = code,
         );
         return non_crud_file;
     }
@@ -36,11 +46,11 @@ pub fn controllers_content(name: &str, crud: &bool) -> String {
             const new{} = await {}Model.create(body);
     
             if (!new{}) {{
-                return res.json({{ code: '011' }});
+                return res.json({{ code: 'E{code}0' }});
             }}
             const {{ _id }} = new{};
     
-            return res.json({{ code: '' }});
+            return res.json({{ code: 'S{code1}0' }});
         }} catch (error) {{
             console.log('🚀 ~ file: {}Controllers.ts:21 ~ create{} ~ error:', error);
         }}
@@ -54,7 +64,7 @@ pub fn controllers_content(name: &str, crud: &bool) -> String {
             const find{} = await {}Model.findOne(filter);
     
             if (!find{}) {{
-                return res.json({{ code: '010' }});
+                return res.json({{ code: 'E{code2}1' }});
             }}
     
             editModelWithSave(find{}, body);
@@ -62,10 +72,10 @@ pub fn controllers_content(name: &str, crud: &bool) -> String {
             const edited{} = await find{}.save();
     
             if (!edited{}) {{
-                return res.json({{ code: '' }});
+                return res.json({{ code: 'E{code3}2' }});
             }}
     
-            return res.json({{ code: '' }});
+            return res.json({{ code: 'S{code4}1' }});
         }} catch (error) {{
             console.log('🚀 ~ file: {}Controllers.ts:45 ~ edit{} ~ error:', error);
         }}
@@ -78,16 +88,16 @@ pub fn controllers_content(name: &str, crud: &bool) -> String {
             const find{} = await {}Model.findOne(filter);
     
             if (!find{}) {{
-                return res.json({{ code: '' }});
+                return res.json({{ code: 'E{code5}1' }});
             }}
     
             const deleted{} = await find{}.delete();
     
             if (!deleted{}) {{
-                return res.json({{ code: '' }});
+                return res.json({{ code: 'E{code6}3' }});
             }}
     
-            return res.json({{ code: '' }});
+            return res.json({{ code: 'S{code7}2' }});
         }} catch (error) {{
             console.log('🚀 ~ file: {}Controllers.ts:67 ~ delete{} ~ error:', error);
         }}
@@ -98,10 +108,10 @@ pub fn controllers_content(name: &str, crud: &bool) -> String {
             const {}s = await {}Model.find();
     
             if (!{}s || {}s.length == 0) {{
-                return res.json({{ code: '' }});
+                return res.json({{ code: 'E{code8}1' }});
             }}
     
-            return res.json({{ code: '', data: {}s }});
+            return res.json({{ code: 'S{code9}3', data: {}s }});
         }} catch (error) {{
             console.log('🚀 ~ file: {}Controllers.ts:88 ~ get{}s ~ error:', error);
         }}
@@ -142,11 +152,60 @@ pub fn controllers_content(name: &str, crud: &bool) -> String {
         name,
         name,
         name,
-        name
+        name,
+        code = code,
+        code1 = code,
+        code2 = code,
+        code3 = code,
+        code4 = code,
+        code5 = code,
+        code6 = code,
+        code7 = code,
+        code8 = code,
+        code9 = code,
     );
     return crud_file;
 }
 
+pub fn codes_content(name: &str, crud: &bool, code: &str) -> String {
+    if *crud {
+        return format!(
+            "
+    E{}0:'Error creating new {}',
+    E{}1:'Error can't find this {}',
+    E{}2:'Error occured while editing the {}',
+    E{}3:'Error occured while deleting the {}',
+    S{}0:'new {} created successfully',
+    S{}1:'{} edited successfully',
+    S{}2:'{} deleted successfully',
+    S{}3:'{} found successfully',
+        ",
+            code,
+            name,
+            code,
+            name,
+            code,
+            name,
+            code,
+            name,
+            code,
+            name,
+            code,
+            name,
+            code,
+            name,
+            code,
+            name,
+        );
+    }
+    return format!(
+        "
+E{}0:'Error creating new {}',
+S{}0:'new {} created successfully',
+    ",
+        code, name, code, name,
+    );
+}
 pub fn model_content(name: &str) -> String {
     return format!(
         "import mongoose from 'mongoose'

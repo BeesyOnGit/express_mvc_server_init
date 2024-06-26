@@ -2,7 +2,7 @@ use serde::Deserialize;
 use std::fs;
 use std::io;
 use std::path::Path;
-use std::process::Command;
+// use std::process::Command;
 
 pub fn capitalize(s: &str) -> String {
     let mut chars = s.chars();

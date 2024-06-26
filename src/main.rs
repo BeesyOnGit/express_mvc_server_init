@@ -1,7 +1,6 @@
 mod utils;
 
 use serde::Deserialize;
-use std::env::consts::OS;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
@@ -11,7 +10,7 @@ use utils::content_utils::{
     app_content, controllers_content, db_connect_content, env_content, middleware_content,
     model_content, package_json_content, router_content,
 };
-use utils::utils::{capitalize, execute, prompt_user, read_file, rm_dir, rust_ascii};
+use utils::utils::{capitalize, prompt_user, read_file, rm_dir, rust_ascii};
 
 #[tokio::main]
 async fn main() {
@@ -90,7 +89,7 @@ async fn main() {
             .expect("error while creating file");
     }
 
-    // files strucutre creation
+    // files structure creation
     for structure in files_struct.iter() {
         for config in configs.iter() {
             let curr_name = capitalize(&config.module_name);
@@ -142,9 +141,15 @@ async fn main() {
                 continue;
             }
 
+            let mut file_definition_name = String::from(&structure.name);
+
+            if &structure.name == "Models" {
+                file_definition_name.pop();
+            }
+
             let mut current_file = File::create(&format!(
                 "{}/App/{}/{}{}.ts",
-                work_dir, structure.name, curr_name, structure.name
+                work_dir, structure.name, curr_name, file_definition_name
             ))
             .expect("Error creating file");
 

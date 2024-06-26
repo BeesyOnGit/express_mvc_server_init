@@ -2,7 +2,7 @@ pub fn controllers_content(name: &str, crud: &bool) -> String {
     if !crud {
         let non_crud_file = format!(
             "import {{ Response, Request }} from 'express';
-        import {{  editModelWithSave }} from '../MiddleWear/ServerFunctions';
+        import {{  editModelWithSave }} from '../Middleware/ServerFunctions';
         import {}Model from '../Models/{}Model';
 
         export const create{} = async (req: Request, res: Response) => {{
@@ -27,7 +27,7 @@ pub fn controllers_content(name: &str, crud: &bool) -> String {
 
     let crud_file = format!(
         "import {{ Response, Request }} from 'express';
-    import {{  editModelWithSave }} from '../MiddleWear/ServerFunctions';
+    import {{  editModelWithSave }} from '../Middleware/ServerFunctions';
     import {}Model from '../Models/{}Model';
     
     export const create{} = async (req: Request, res: Response) => {{
@@ -177,7 +177,7 @@ pub fn router_content(name: &str, crud: &bool) -> String {
         return format!(
             "import express from 'express';
         // import your middlewars here
-        // import {{ AuthVerification }} from '../MiddleWear/ServerFunctions';
+        // import {{ AuthVerification }} from '../Middleware/ServerFunctions';
         import {{ create{}}} from '../Controllers/{}Controllers';
         const {}Routes = express.Router();
         
@@ -192,7 +192,7 @@ pub fn router_content(name: &str, crud: &bool) -> String {
     return format!(
         "import express from 'express';
     // import your middlewars here
-    // import {{ AuthVerification }} from '../MiddleWear/ServerFunctions';
+    // import {{ AuthVerification }} from '../Middleware/ServerFunctions';
     import {{ create{}, delete{}, edit{}, get{}s }} from '../Controllers/{}Controllers';
     const {}Routes = express.Router();
     

@@ -56,17 +56,17 @@ pub fn prompt_user() -> String {
     return input;
 }
 
-pub async fn execute(commande: String) -> Result<String, bool> {
-    match Command::new("sh").arg("-c").arg(&commande).output() {
-        Ok(output) => {
-            if !output.status.success() {
-                return Err(false);
-            }
-            Ok(String::from(format!("executed {:?} ", &commande)))
-        }
-        Err(err) => panic!(" {} ", err),
-    }
-}
+// pub async fn execute(commande: String) -> Result<String, bool> {
+//     match Command::new("sh").arg("-c").arg(&commande).output() {
+//         Ok(output) => {
+//             if !output.status.success() {
+//                 return Err(false);
+//             }
+//             Ok(String::from(format!("executed {:?} ", &commande)))
+//         }
+//         Err(err) => panic!(" {} ", err),
+//     }
+// }
 
 pub fn rust_ascii() -> String {
     return "                                          #(    #(,    (*                                    
